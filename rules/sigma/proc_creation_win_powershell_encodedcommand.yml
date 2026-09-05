@@ -1,0 +1,25 @@
+title: Ejecución de PowerShell con comando codificado (EncodedCommand)
+id: f2c11f9d-a202-4a72-b460-29fd231c1318
+status: experimental
+description: Detecta la ejecución de powershell.exe utilizando el parámetro -EncodedCommand (o su forma abreviada), técnica habitual para ofuscar comandos maliciosos codificándolos en Base64 y evitar su inspección directa.
+references:
+    - https://attack.mitre.org/techniques/T1059/001/
+author: Jairos
+date: 2026-09-05
+tags:
+    - attack.execution
+    - attack.t1059.001
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    selection:
+        Image|endswith: '\powershell.exe'
+        CommandLine|contains:
+            - '-EncodedCommand'
+            - '-enc'
+    condition: selection
+falsepositives:
+    - Scripts de administración remota que codifican comandos para pasar caracteres especiales o saltos de línea de forma segura
+    - Herramientas de gestión de sistemas (SCCM, Ansible, DSC) que puedan invocar PowerShell de esta forma
+level: medium
